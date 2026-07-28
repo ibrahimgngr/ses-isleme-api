@@ -1,7 +1,0 @@
-venv aktif etme: venv\Scripts\activate
-uvicorn u başlatma: pyton -m uvicorn main:app --reload
-
-2. cmd ekranı
-python -m http.server 8080
-
-tarayıcıdan--> http://localhost:8080
