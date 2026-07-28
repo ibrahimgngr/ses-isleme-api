@@ -57,4 +57,3 @@ def ses_isleme_fonksiyonu(dosya_yolu: str):
                 konusmalar.append(satir.strip())
 
     return {"metin": metin, "konusmalar": konusmalar}
-    
