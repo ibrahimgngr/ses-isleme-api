@@ -101,6 +101,8 @@
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition = null;
         let isListening = false;
+        let kaliciMetin = "";
+
         const textArea = document.getElementById('transcriptText');
         const micBtn = document.getElementById('micBtn');
 
@@ -111,19 +113,18 @@
             recognition.lang = 'tr-TR';
 
             recognition.onresult = function(event){
-                let finalTranscript = '';
+                let geciciMetin = '';
 
                 for(let i = event.resultIndex; i < event.results.length; i++){
                     if(event.results[i].isFinal){
-                        finalTranscript += event.results[i][0].transcript + ' ';
+                        kalicimetin += event.results[i][0].transcript + ' ';
+                    }else{
+                        geciciMetin += event.results[i][0].transcript;
                     }
                 }
 
-                // Eğer daha önce kaydedilmiş kalıcı bir metin varsa üzerine ekle
-                if(finalTranscript !== '' || interimTranscript !== ""){
-                    const mevcutMetin = textArea.value.replace(interimTranscript, '');
-                    textArea.value += finalTranscript ? (textArea.value + finalTranscript) : (mevcutMetin + interimTranscript);
-                }
+                // hem kesinleşenleri hem de anlık konuşmaları aynı anda ekrana basma
+                textArea.value = kaliciMetin + geciciMetin;
             };
         }else{
             alert("Tarayıcınız anlık ses tanımayı desteklemiyor. Lütfen Google Chorome kullanın.");
@@ -136,6 +137,7 @@
                 stopListening();
             }else{
                 textArea.value = ''; // Yeniden başlatınca eski metni temizle
+                kaliciMetin = "";
                 recognition.start();
                 isListening = true;
                 micBtn.textContent = "⏹️ Dinlemeyi Durdur";
@@ -181,7 +183,7 @@
                 const data = await response.json();
 
                 if(response.ok){
-                    // aPI den gelen JSON formatındaki metni ekrana güzelce bas
+                    // API den gelen JSON formatındaki metni ekrana güzelce bas
                     resultText.innerHTML = data.sonuc.replace(/\n/g, '<br>');
                     resultBox.style.display = "block";
                 }else{
